@@ -14,14 +14,10 @@ import LandingScreen from './components/layout/LandingScreen.jsx'
 import logoSquare from './assets/logo-square.png'
 
 export default function App() {
-  const { moradoras, role, loading, erroConexao } = useApp()
+  const { moradoras, role, setRole, setCurrentMoradoraId, loading, erroConexao } = useApp()
   const [page, setPage] = useState('dashboard')
   const [mobileOpen, setMobileOpen] = useState(false)
   const [entrou, setEntrou] = useState(false)
-
-  if (!entrou) {
-    return <LandingScreen onEnter={() => setEntrou(true)} />
-  }
 
   if (loading) {
     return (
@@ -41,6 +37,23 @@ export default function App() {
           Confira sua internet e recarregue a página. Se o problema continuar, avise a administradora.
         </p>
       </div>
+    )
+  }
+
+  if (!entrou) {
+    return (
+      <LandingScreen
+        moradoras={moradoras}
+        onChooseAdmin={() => {
+          setRole('admin')
+          setEntrou(true)
+        }}
+        onChooseMoradora={(id) => {
+          setRole('moradora')
+          setCurrentMoradoraId(id)
+          setEntrou(true)
+        }}
+      />
     )
   }
 
