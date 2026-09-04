@@ -14,6 +14,7 @@ const DESPESA_MAP = {
   observacao: 'observacao',
 }
 const ENTRADA_MAP = { data: 'data', valor: 'valor', moradoraId: 'moradora_id', referencia: 'referencia', observacao: 'observacao' }
+const ANEXO_MAP = { nome: 'nome', descricao: 'descricao', arquivoPath: 'arquivo_path', arquivoNome: 'arquivo_nome' }
 
 function toDb(obj, fieldMap) {
   const out = {}
@@ -56,15 +57,27 @@ export function mapEntrada(r) {
   }
 }
 
+export function mapAnexo(r) {
+  return {
+    id: r.id,
+    nome: r.nome,
+    descricao: r.descricao || '',
+    arquivoPath: r.arquivo_path,
+    arquivoNome: r.arquivo_nome,
+    criadoEm: r.criado_em,
+  }
+}
+
 export async function fetchAll() {
-  const [moradoras, categorias, despesas, entradas, fechamentos] = await Promise.all([
+  const [moradoras, categorias, despesas, entradas, fechamentos, anexos] = await Promise.all([
     supabase.from('moradoras').select('*').order('data_entrada', { ascending: true }),
     supabase.from('categorias').select('*'),
     supabase.from('despesas').select('*').order('data', { ascending: false }),
     supabase.from('entradas').select('*').order('data', { ascending: false }),
     supabase.from('fechamentos').select('*'),
+    supabase.from('anexos').select('*').order('criado_em', { ascending: false }),
   ])
-  for (const r of [moradoras, categorias, despesas, entradas, fechamentos]) {
+  for (const r of [moradoras, categorias, despesas, entradas, fechamentos, anexos]) {
     if (r.error) throw r.error
   }
   const fechamentosObj = {}
@@ -77,6 +90,7 @@ export async function fetchAll() {
     despesas: despesas.data.map(mapDespesa),
     entradas: entradas.data.map(mapEntrada),
     fechamentos: fechamentosObj,
+    anexos: anexos.data.map(mapAnexo),
   }
 }
 
@@ -136,6 +150,16 @@ export async function dbSetFechamento(monthKey, { fechado, fechadoPor, fechadoEm
   if (error) throw error
 }
 
+// ---------- Anexos (documentos gerais) ----------
+export async function dbInsertAnexo(anexo) {
+  const { error } = await supabase.from('anexos').insert({ id: anexo.id, ...toDb(anexo, ANEXO_MAP) })
+  if (error) throw error
+}
+export async function dbDeleteAnexo(id) {
+  const { error } = await supabase.from('anexos').delete().eq('id', id)
+  if (error) throw error
+}
+
 // ---------- Comprovantes (Supabase Storage) ----------
 export async function uploadComprovante(file) {
   const ext = file.name.includes('.') ? file.name.split('.').pop() : 'bin'
@@ -162,6 +186,7 @@ export function subscribeRealtime(handlers) {
     .on('postgres_changes', { event: '*', schema: 'public', table: 'despesas' }, (p) => handlers.onDespesas(p))
     .on('postgres_changes', { event: '*', schema: 'public', table: 'entradas' }, (p) => handlers.onEntradas(p))
     .on('postgres_changes', { event: '*', schema: 'public', table: 'fechamentos' }, (p) => handlers.onFechamentos(p))
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'anexos' }, (p) => handlers.onAnexos(p))
     .subscribe()
 
   return () => supabase.removeChannel(channel)

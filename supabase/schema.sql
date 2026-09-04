@@ -46,6 +46,15 @@ create table if not exists fechamentos (
   fechado_em timestamptz
 );
 
+create table if not exists anexos (
+  id text primary key,
+  nome text not null,
+  descricao text default '',
+  arquivo_path text not null,
+  arquivo_nome text not null,
+  criado_em timestamptz not null default now()
+);
+
 -- Categorias padrão (só insere se a tabela estiver vazia)
 insert into categorias (id, nome)
 select * from (values
@@ -63,7 +72,7 @@ select * from (values
 where not exists (select 1 from categorias);
 
 -- Habilita atualização em tempo real (todas as moradoras veem mudanças na hora)
-alter publication supabase_realtime add table moradoras, categorias, despesas, entradas, fechamentos;
+alter publication supabase_realtime add table moradoras, categorias, despesas, entradas, fechamentos, anexos;
 
 -- Bucket para guardar fotos de comprovante
 insert into storage.buckets (id, name, public)
@@ -78,11 +87,13 @@ alter table categorias enable row level security;
 alter table despesas enable row level security;
 alter table entradas enable row level security;
 alter table fechamentos enable row level security;
+alter table anexos enable row level security;
 
 create policy "public all moradoras" on moradoras for all using (true) with check (true);
 create policy "public all categorias" on categorias for all using (true) with check (true);
 create policy "public all despesas" on despesas for all using (true) with check (true);
 create policy "public all entradas" on entradas for all using (true) with check (true);
 create policy "public all fechamentos" on fechamentos for all using (true) with check (true);
+create policy "public all anexos" on anexos for all using (true) with check (true);
 create policy "public all comprovantes" on storage.objects for all
   using (bucket_id = 'comprovantes') with check (bucket_id = 'comprovantes');

@@ -1,12 +1,13 @@
 import React from 'react'
 import Logo from './Logo.jsx'
 import { useApp } from '../../context/AppContext.jsx'
-import { IconHome, IconReceipt, IconWallet, IconUserCircle, IconClipboard, IconBook, IconUsers } from '../ui/Icons.jsx'
+import { IconHome, IconReceipt, IconWallet, IconUserCircle, IconClipboard, IconBook, IconUsers, IconFileText } from '../ui/Icons.jsx'
 
 const NAV_ITEMS = [
   { id: 'dashboard', label: 'Início', Icon: IconHome, roles: ['admin', 'moradora'] },
   { id: 'despesas', label: 'Despesas', Icon: IconReceipt, roles: ['admin', 'moradora'] },
   { id: 'entradas', label: 'Entradas', Icon: IconWallet, roles: ['admin', 'moradora'] },
+  { id: 'anexos', label: 'Comprovantes', Icon: IconFileText, roles: ['admin', 'moradora'] },
   { id: 'situacao', label: 'Minha Situação', Icon: IconUserCircle, roles: ['moradora'] },
   { id: 'prestacao', label: 'Prestação de Contas', Icon: IconClipboard, roles: ['admin', 'moradora'] },
   { id: 'historico', label: 'Histórico', Icon: IconBook, roles: ['admin', 'moradora'] },

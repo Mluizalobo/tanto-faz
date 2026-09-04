@@ -9,6 +9,7 @@ import MoradorasPage from './components/moradoras/MoradorasPage.jsx'
 import PrestacaoContasPage from './components/prestacao/PrestacaoContasPage.jsx'
 import HistoricoPage from './components/historico/HistoricoPage.jsx'
 import MinhaSituacaoPage from './components/situacao/MinhaSituacaoPage.jsx'
+import AnexosPage from './components/anexos/AnexosPage.jsx'
 import Onboarding from './components/layout/Onboarding.jsx'
 import LandingScreen from './components/layout/LandingScreen.jsx'
 import logoSquare from './assets/logo-square.png'
@@ -74,6 +75,7 @@ export default function App() {
           {effectivePage === 'dashboard' && <DashboardPage goTo={setPage} />}
           {effectivePage === 'despesas' && <DespesasPage />}
           {effectivePage === 'entradas' && <EntradasPage />}
+          {effectivePage === 'anexos' && <AnexosPage />}
           {effectivePage === 'moradoras' && role === 'admin' && <MoradorasPage />}
           {effectivePage === 'prestacao' && <PrestacaoContasPage />}
           {effectivePage === 'historico' && <HistoricoPage goTo={setPage} />}

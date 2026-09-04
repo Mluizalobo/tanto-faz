@@ -17,12 +17,14 @@ import {
   dbUpdateEntrada,
   dbDeleteEntrada,
   dbSetFechamento,
+  dbInsertAnexo,
+  dbDeleteAnexo,
   uploadComprovante,
   deleteComprovanteFile,
   subscribeRealtime,
 } from '../db/api.js'
 import { applyRealtimeToArray, applyRealtimeToFechamentos } from '../utils/syncArray.js'
-import { mapMoradora, mapCategoria, mapDespesa, mapEntrada } from '../db/api.js'
+import { mapMoradora, mapCategoria, mapDespesa, mapEntrada, mapAnexo } from '../db/api.js'
 import { saveComprovante, deleteComprovante as deleteLocalComprovante } from '../db/files.js'
 
 const AppContext = createContext(null)
@@ -49,6 +51,7 @@ function SupabaseAppProvider({ children }) {
   const [despesas, setDespesas] = useState([])
   const [entradas, setEntradas] = useState([])
   const [fechamentos, setFechamentos] = useState({})
+  const [anexos, setAnexos] = useState([])
   const [loading, setLoading] = useState(true)
   const [erroConexao, setErroConexao] = useState(false)
 
@@ -62,6 +65,7 @@ function SupabaseAppProvider({ children }) {
         setDespesas(data.despesas)
         setEntradas(data.entradas)
         setFechamentos(data.fechamentos)
+        setAnexos(data.anexos)
         setLoading(false)
       })
       .catch(() => {
@@ -77,6 +81,7 @@ function SupabaseAppProvider({ children }) {
       onDespesas: (p) => applyRealtimeToArray(setDespesas, mapDespesa, p),
       onEntradas: (p) => applyRealtimeToArray(setEntradas, mapEntrada, p),
       onFechamentos: (p) => applyRealtimeToFechamentos(setFechamentos, p),
+      onAnexos: (p) => applyRealtimeToArray(setAnexos, mapAnexo, p),
     })
 
     return () => {
@@ -250,6 +255,32 @@ function SupabaseAppProvider({ children }) {
     await dbSetFechamento(monthKey, fechamento)
   }
 
+  // ---------- Anexos (documentos gerais) ----------
+  async function addAnexo(data, arquivo) {
+    if (!arquivo) return { ok: false, reason: 'sem-arquivo' }
+    const arquivoPath = await uploadComprovante(arquivo)
+    const a = {
+      id: generateId('anx'),
+      nome: data.nome || arquivo.name,
+      descricao: data.descricao || '',
+      arquivoPath,
+      arquivoNome: arquivo.name,
+      criadoEm: new Date().toISOString(),
+    }
+    setAnexos((prev) => [a, ...prev])
+    await dbInsertAnexo(a)
+    return { ok: true, id: a.id }
+  }
+
+  async function deleteAnexo(id) {
+    const alvo = anexos.find((a) => a.id === id)
+    if (!alvo) return { ok: false }
+    if (alvo.arquivoPath) await deleteComprovanteFile(alvo.arquivoPath)
+    setAnexos((prev) => prev.filter((a) => a.id !== id))
+    await dbDeleteAnexo(id)
+    return { ok: true }
+  }
+
   const value = useMemo(
     () => ({
       moradoras,
@@ -257,6 +288,7 @@ function SupabaseAppProvider({ children }) {
       despesas,
       entradas,
       fechamentos,
+      anexos,
       loading,
       erroConexao,
       cloudSync: true,
@@ -275,8 +307,22 @@ function SupabaseAppProvider({ children }) {
       deleteEntrada,
       fecharMes,
       reabrirMes,
+      addAnexo,
+      deleteAnexo,
     }),
-    [moradoras, categorias, despesas, entradas, fechamentos, loading, erroConexao, ui.role, ui.currentMoradoraId, ui.selectedMonth],
+    [
+      moradoras,
+      categorias,
+      despesas,
+      entradas,
+      fechamentos,
+      anexos,
+      loading,
+      erroConexao,
+      ui.role,
+      ui.currentMoradoraId,
+      ui.selectedMonth,
+    ],
   )
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>
@@ -292,6 +338,7 @@ function LocalAppProvider({ children }) {
   const [despesas, setDespesas] = useLocalStorage('tf_despesas', [])
   const [entradas, setEntradas] = useLocalStorage('tf_entradas', [])
   const [fechamentos, setFechamentos] = useLocalStorage('tf_fechamentos', {})
+  const [anexos, setAnexos] = useLocalStorage('tf_anexos', [])
   const ui = useLocalUiState()
 
   function isMonthClosed(monthKey) {
@@ -452,6 +499,31 @@ function LocalAppProvider({ children }) {
     setFechamentos((prev) => ({ ...prev, [monthKey]: { ...(prev[monthKey] || {}), fechado: false } }))
   }
 
+  // ---------- Anexos (documentos gerais) ----------
+  async function addAnexo(data, arquivo) {
+    if (!arquivo) return { ok: false, reason: 'sem-arquivo' }
+    const arquivoPath = generateId('anxfile')
+    await saveComprovante(arquivoPath, arquivo)
+    const a = {
+      id: generateId('anx'),
+      nome: data.nome || arquivo.name,
+      descricao: data.descricao || '',
+      arquivoPath,
+      arquivoNome: arquivo.name,
+      criadoEm: new Date().toISOString(),
+    }
+    setAnexos((prev) => [a, ...prev])
+    return { ok: true, id: a.id }
+  }
+
+  async function deleteAnexo(id) {
+    const alvo = anexos.find((a) => a.id === id)
+    if (!alvo) return { ok: false }
+    if (alvo.arquivoPath) await deleteLocalComprovante(alvo.arquivoPath)
+    setAnexos((prev) => prev.filter((a) => a.id !== id))
+    return { ok: true }
+  }
+
   const value = useMemo(
     () => ({
       moradoras,
@@ -459,6 +531,7 @@ function LocalAppProvider({ children }) {
       despesas,
       entradas,
       fechamentos,
+      anexos,
       loading: false,
       erroConexao: false,
       cloudSync: false,
@@ -477,8 +550,10 @@ function LocalAppProvider({ children }) {
       deleteEntrada,
       fecharMes,
       reabrirMes,
+      addAnexo,
+      deleteAnexo,
     }),
-    [moradoras, categorias, despesas, entradas, fechamentos, ui.role, ui.currentMoradoraId, ui.selectedMonth],
+    [moradoras, categorias, despesas, entradas, fechamentos, anexos, ui.role, ui.currentMoradoraId, ui.selectedMonth],
   )
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>

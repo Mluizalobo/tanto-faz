@@ -7,6 +7,7 @@ const PAGE_TITLES = {
   dashboard: 'Início',
   despesas: 'Despesas',
   entradas: 'Entradas da caixinha',
+  anexos: 'Comprovantes e documentos',
   situacao: 'Minha situação',
   prestacao: 'Prestação de contas',
   historico: 'Histórico financeiro',
