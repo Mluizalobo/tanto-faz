@@ -4,11 +4,11 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        display: ['"Fredoka"', 'system-ui', 'sans-serif'],
+        display: ['"Inter"', 'system-ui', 'sans-serif'],
         sans: ['"Inter"', 'system-ui', 'sans-serif'],
       },
       colors: {
-        cream: '#FBF6EE',
+        cream: '#F6F5F2',
         coral: {
           50: '#FFF1EC',
           100: '#FFE1D6',

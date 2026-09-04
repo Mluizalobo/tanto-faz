@@ -6,6 +6,7 @@ import Card from '../ui/Card.jsx'
 import MonthPicker from '../ui/MonthPicker.jsx'
 import EmptyState from '../ui/EmptyState.jsx'
 import MoradoraAvatar from '../moradoras/MoradoraAvatar.jsx'
+import { IconUserCircle } from '../ui/Icons.jsx'
 
 export default function MinhaSituacaoPage() {
   const { moradoras, despesas, entradas, currentMoradoraId, setCurrentMoradoraId, selectedMonth, setSelectedMonth } = useApp()
@@ -18,7 +19,7 @@ export default function MinhaSituacaoPage() {
   const minhaLinha = resumo.porMoradora.find((p) => p.moradora.id === currentMoradoraId)
 
   if (moradoras.length === 0) {
-    return <EmptyState icon="🙋" title="Nenhuma moradora cadastrada ainda" />
+    return <EmptyState icon={<IconUserCircle />} title="Nenhuma moradora cadastrada ainda" />
   }
 
   if (!eu) {
@@ -59,7 +60,7 @@ export default function MinhaSituacaoPage() {
       </Card>
 
       {!minhaLinha ? (
-        <EmptyState icon="😴" title="Você não estava ativa neste mês" subtitle="Nenhuma parte foi calculada para você." />
+        <EmptyState icon={<IconUserCircle />} title="Você não estava ativa neste mês" subtitle="Nenhuma parte foi calculada para você." />
       ) : (
         <>
           <div className="grid grid-cols-2 gap-4">

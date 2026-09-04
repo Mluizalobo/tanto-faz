@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Modal from '../ui/Modal.jsx'
 import { useComprovanteUrl } from '../../hooks/useComprovanteUrl.js'
+import { IconPaperclip } from '../ui/Icons.jsx'
 
 export default function ComprovanteViewer({ comprovanteId, nome }) {
   const [open, setOpen] = useState(false)
@@ -20,7 +21,7 @@ export default function ComprovanteViewer({ comprovanteId, nome }) {
         className="inline-flex items-center gap-1 text-teal-600 hover:text-teal-700 text-sm font-semibold"
         title={nome}
       >
-        📎 <span className="hidden sm:inline">ver</span>
+        <IconPaperclip className="w-4 h-4" /> <span className="hidden sm:inline">ver</span>
       </button>
       <Modal open={open} onClose={() => setOpen(false)} title={nome || 'Comprovante'}>
         {loading && <p className="text-sm text-plum/50 py-8 text-center">Carregando…</p>}

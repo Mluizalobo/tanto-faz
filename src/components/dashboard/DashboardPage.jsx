@@ -9,6 +9,9 @@ import Modal from '../ui/Modal.jsx'
 import MonthPicker from '../ui/MonthPicker.jsx'
 import MoradoraAvatar from '../moradoras/MoradoraAvatar.jsx'
 import DespesaForm from '../despesas/DespesaForm.jsx'
+import PlanilhaDespesas from './PlanilhaDespesas.jsx'
+import { IconWallet, IconReceipt, IconHash, IconUsers } from '../ui/Icons.jsx'
+import logoSquare from '../../assets/logo-square.png'
 
 export default function DashboardPage({ goTo }) {
   const { moradoras, despesas, entradas, role, currentMoradoraId, addDespesa, selectedMonth, setSelectedMonth, isMonthClosed } = useApp()
@@ -36,7 +39,12 @@ export default function DashboardPage({ goTo }) {
       </div>
 
       <Card className="p-6 bg-plum text-white overflow-hidden relative">
-        <div className="absolute -right-6 -top-6 text-[8rem] opacity-10 select-none">🏠</div>
+        <img
+          src={logoSquare}
+          alt=""
+          aria-hidden="true"
+          className="absolute -right-8 -top-8 w-44 h-44 opacity-[0.14] select-none rounded-2xl pointer-events-none"
+        />
         <p className="text-white/60 text-sm font-semibold">Saldo atual da caixinha</p>
         <p className="font-display text-4xl font-bold mt-1">{formatBRL(resumo.saldoFinal)}</p>
         <div className="flex flex-wrap gap-x-8 gap-y-2 mt-4 text-sm text-white/70">
@@ -47,10 +55,10 @@ export default function DashboardPage({ goTo }) {
       </Card>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard icon="💵" label="Entradas no mês" value={formatBRL(resumo.totalEntradas)} accent="text-teal-600" />
-        <StatCard icon="🧾" label="Despesas no mês" value={formatBRL(resumo.totalDespesas)} accent="text-coral-600" />
-        <StatCard icon="📦" label="Total de despesas" value={resumo.despesasMes.length} accent="text-plum" />
-        <StatCard icon="👭" label="Moradoras ativas" value={resumo.numMoradoras} accent="text-plum" />
+        <StatCard Icon={IconWallet} label="Entradas no mês" value={formatBRL(resumo.totalEntradas)} accent="text-teal-600" />
+        <StatCard Icon={IconReceipt} label="Despesas no mês" value={formatBRL(resumo.totalDespesas)} accent="text-coral-600" />
+        <StatCard Icon={IconHash} label="Total de despesas" value={resumo.despesasMes.length} accent="text-plum" />
+        <StatCard Icon={IconUsers} label="Moradoras ativas" value={resumo.numMoradoras} accent="text-plum" />
       </div>
 
       <Card className="p-5">
@@ -106,6 +114,8 @@ export default function DashboardPage({ goTo }) {
         </button>
       </Card>
 
+      <PlanilhaDespesas />
+
       <Modal open={formOpen} onClose={() => setFormOpen(false)} title="Nova despesa" wide>
         <DespesaForm
           defaultMoradoraId={role === 'moradora' ? currentMoradoraId : undefined}
@@ -117,10 +127,12 @@ export default function DashboardPage({ goTo }) {
   )
 }
 
-function StatCard({ icon, label, value, accent }) {
+function StatCard({ Icon, label, value, accent }) {
   return (
     <Card className="p-4">
-      <div className="text-2xl mb-1">{icon}</div>
+      <div className="w-9 h-9 rounded-lg bg-plum/5 flex items-center justify-center mb-2.5">
+        <Icon className={`w-5 h-5 ${accent}`} />
+      </div>
       <p className="text-xs font-semibold text-plum/40 uppercase tracking-wide">{label}</p>
       <p className={`font-display text-2xl font-bold mt-0.5 ${accent}`}>{value}</p>
     </Card>

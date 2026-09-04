@@ -1,15 +1,16 @@
 import React from 'react'
 import Logo from './Logo.jsx'
 import { useApp } from '../../context/AppContext.jsx'
+import { IconHome, IconReceipt, IconWallet, IconUserCircle, IconClipboard, IconBook, IconUsers } from '../ui/Icons.jsx'
 
 const NAV_ITEMS = [
-  { id: 'dashboard', label: 'Início', icon: '🏠', roles: ['admin', 'moradora'] },
-  { id: 'despesas', label: 'Despesas', icon: '🧾', roles: ['admin', 'moradora'] },
-  { id: 'entradas', label: 'Entradas', icon: '💰', roles: ['admin', 'moradora'] },
-  { id: 'situacao', label: 'Minha Situação', icon: '🙋', roles: ['moradora'] },
-  { id: 'prestacao', label: 'Prestação de Contas', icon: '📋', roles: ['admin', 'moradora'] },
-  { id: 'historico', label: 'Histórico', icon: '📚', roles: ['admin', 'moradora'] },
-  { id: 'moradoras', label: 'Moradoras', icon: '👭', roles: ['admin'] },
+  { id: 'dashboard', label: 'Início', Icon: IconHome, roles: ['admin', 'moradora'] },
+  { id: 'despesas', label: 'Despesas', Icon: IconReceipt, roles: ['admin', 'moradora'] },
+  { id: 'entradas', label: 'Entradas', Icon: IconWallet, roles: ['admin', 'moradora'] },
+  { id: 'situacao', label: 'Minha Situação', Icon: IconUserCircle, roles: ['moradora'] },
+  { id: 'prestacao', label: 'Prestação de Contas', Icon: IconClipboard, roles: ['admin', 'moradora'] },
+  { id: 'historico', label: 'Histórico', Icon: IconBook, roles: ['admin', 'moradora'] },
+  { id: 'moradoras', label: 'Moradoras', Icon: IconUsers, roles: ['admin'] },
 ]
 
 export default function Sidebar({ page, setPage, mobileOpen, setMobileOpen }) {
@@ -43,15 +44,15 @@ export default function Sidebar({ page, setPage, mobileOpen, setMobileOpen }) {
                   : 'text-plum/70 hover:bg-plum/5 hover:text-plum'
               }`}
             >
-              <span className="text-lg">{item.icon}</span>
+              <item.Icon className="w-5 h-5" />
               {item.label}
             </button>
           ))}
         </nav>
         <div className="px-5 py-5 text-[11px] text-plum/35 leading-relaxed">
-          feito com carinho pra república 🏡
+          Feito para a República Tanto Faz.
           <br />
-          seus dados ficam só neste navegador.
+          Seus dados ficam só neste navegador.
         </div>
       </aside>
     </>

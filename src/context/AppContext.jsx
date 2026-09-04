@@ -62,10 +62,10 @@ export function AppProvider({ children }) {
   }
 
   // ---------- Categorias ----------
-  function addCategoria(nome, icon = '🏷️') {
+  function addCategoria(nome) {
     const existing = categorias.find((c) => c.nome.toLowerCase() === nome.toLowerCase())
     if (existing) return existing.id
-    const c = { id: generateId('cat'), nome, icon }
+    const c = { id: generateId('cat'), nome }
     setCategorias((prev) => [...prev, c])
     return c.id
   }
@@ -122,7 +122,7 @@ export function AppProvider({ children }) {
           ? {
               ...d,
               ...data,
-              valor: Number(data.valor),
+              valor: data.valor !== undefined ? Number(data.valor) : d.valor,
               comprovanteId,
               comprovanteNome,
             }
@@ -164,7 +164,9 @@ export function AppProvider({ children }) {
     const monthKeyAtual = alvo.data.slice(0, 7)
     const monthKeyNovo = (data.data || alvo.data).slice(0, 7)
     if (isMonthClosed(monthKeyAtual) || isMonthClosed(monthKeyNovo)) return { ok: false, reason: 'mes-fechado' }
-    setEntradas((prev) => prev.map((e) => (e.id === id ? { ...e, ...data, valor: Number(data.valor) } : e)))
+    setEntradas((prev) =>
+      prev.map((e) => (e.id === id ? { ...e, ...data, valor: data.valor !== undefined ? Number(data.valor) : e.valor } : e)),
+    )
     return { ok: true }
   }
 

@@ -9,6 +9,7 @@ import ConfirmDialog from '../ui/ConfirmDialog.jsx'
 import EmptyState from '../ui/EmptyState.jsx'
 import MoradoraAvatar from './MoradoraAvatar.jsx'
 import MoradoraForm from './MoradoraForm.jsx'
+import { IconUsers } from '../ui/Icons.jsx'
 
 export default function MoradorasPage() {
   const { moradoras, addMoradora, updateMoradora, toggleMoradoraStatus, removeMoradora } = useApp()
@@ -50,7 +51,7 @@ export default function MoradorasPage() {
 
       {moradoras.length === 0 ? (
         <EmptyState
-          icon="👭"
+          icon={<IconUsers />}
           title="Nenhuma moradora cadastrada"
           subtitle="Cadastre as moradoras da república para começar a dividir as despesas."
           action={<Button onClick={() => setFormOpen(true)}>+ Nova Moradora</Button>}

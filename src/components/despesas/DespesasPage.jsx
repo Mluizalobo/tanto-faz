@@ -11,6 +11,8 @@ import MonthPicker from '../ui/MonthPicker.jsx'
 import MoradoraAvatar from '../moradoras/MoradoraAvatar.jsx'
 import DespesaForm from './DespesaForm.jsx'
 import ComprovanteViewer from './ComprovanteViewer.jsx'
+import { IconReceipt, IconLock, IconSearch, IconPencil, IconTrash } from '../ui/Icons.jsx'
+import { getCategoryIcon } from '../../utils/categoryIcon.js'
 
 const inputClass =
   'px-3.5 py-2 rounded-xl border border-plum/15 bg-white text-sm text-plum placeholder:text-plum/30 focus:outline-none focus:ring-2 focus:ring-coral-300 focus:border-coral-300'
@@ -84,7 +86,7 @@ export default function DespesasPage() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <MonthPicker value={selectedMonth} onChange={setSelectedMonth} />
         <div className="flex items-center gap-3">
-          {mesFechado && <Badge variant="warning">🔒 mês fechado</Badge>}
+          {mesFechado && <Badge variant="warning"><IconLock className="w-3.5 h-3.5" /> mês fechado</Badge>}
           <Button onClick={openNova} disabled={mesFechado}>
             + Nova Despesa
           </Button>
@@ -92,17 +94,20 @@ export default function DespesasPage() {
       </div>
 
       <Card className="p-4 flex flex-wrap gap-3 items-center">
-        <input
-          className={`${inputClass} flex-1 min-w-[180px]`}
-          placeholder="🔎 Pesquisar despesa…"
-          value={busca}
-          onChange={(e) => setBusca(e.target.value)}
-        />
+        <div className="relative flex-1 min-w-[180px]">
+          <IconSearch className="w-4 h-4 text-plum/30 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <input
+            className={`${inputClass} w-full pl-9`}
+            placeholder="Pesquisar despesa…"
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+          />
+        </div>
         <select className={inputClass} value={filtroCategoria} onChange={(e) => setFiltroCategoria(e.target.value)}>
           <option value="">Todas categorias</option>
           {categorias.map((c) => (
             <option key={c.id} value={c.id}>
-              {c.icon} {c.nome}
+              {c.nome}
             </option>
           ))}
         </select>
@@ -122,7 +127,7 @@ export default function DespesasPage() {
       <Card className="overflow-hidden">
         {lista.length === 0 ? (
           <EmptyState
-            icon="🧾"
+            icon={<IconReceipt />}
             title="Nenhuma despesa neste mês"
             subtitle="Assim que alguém registrar uma compra da casa, ela aparece aqui."
             action={
@@ -149,6 +154,7 @@ export default function DespesasPage() {
                 {lista.map((d) => {
                   const cat = categoriaOf(d.categoriaId)
                   const mor = moradoraOf(d.pagoPor)
+                  const CatIcon = getCategoryIcon(d.categoriaId)
                   return (
                     <tr key={d.id} className="border-b border-plum/5 last:border-0 hover:bg-plum/[0.02]">
                       <td className="px-5 py-3 text-plum/60 whitespace-nowrap">{formatDate(d.data)}</td>
@@ -157,7 +163,7 @@ export default function DespesasPage() {
                         {d.observacao && <p className="text-xs text-plum/40 font-normal">{d.observacao}</p>}
                       </td>
                       <td className="px-5 py-3 whitespace-nowrap">
-                        <Badge>{cat?.icon} {cat?.nome || '—'}</Badge>
+                        <Badge><CatIcon className="w-3.5 h-3.5" /> {cat?.nome || '—'}</Badge>
                       </td>
                       <td className="px-5 py-3 whitespace-nowrap">
                         <div className="flex items-center gap-2">
@@ -172,11 +178,11 @@ export default function DespesasPage() {
                       <td className="px-5 py-3 text-right whitespace-nowrap">
                         {isAdmin && !mesFechado && (
                           <div className="flex justify-end gap-1">
-                            <button onClick={() => openEditar(d)} className="w-8 h-8 rounded-lg hover:bg-plum/8 text-plum/50" title="Editar">
-                              ✏️
+                            <button onClick={() => openEditar(d)} className="w-8 h-8 rounded-lg hover:bg-plum/8 text-plum/50 inline-flex items-center justify-center" title="Editar">
+                              <IconPencil className="w-4 h-4" />
                             </button>
-                            <button onClick={() => setExcluindo(d)} className="w-8 h-8 rounded-lg hover:bg-coral-50 text-coral-500" title="Excluir">
-                              🗑️
+                            <button onClick={() => setExcluindo(d)} className="w-8 h-8 rounded-lg hover:bg-coral-50 text-coral-500 inline-flex items-center justify-center" title="Excluir">
+                              <IconTrash className="w-4 h-4" />
                             </button>
                           </div>
                         )}

@@ -9,6 +9,8 @@ import Modal from '../ui/Modal.jsx'
 import MonthPicker from '../ui/MonthPicker.jsx'
 import MoradoraAvatar from '../moradoras/MoradoraAvatar.jsx'
 import RelatorioPrint from './RelatorioPrint.jsx'
+import { IconLock, IconCheckCircle, IconFileText } from '../ui/Icons.jsx'
+import { getCategoryIcon } from '../../utils/categoryIcon.js'
 
 export default function PrestacaoContasPage() {
   const { moradoras, despesas, entradas, categorias, fechamentos, role, fecharMes, reabrirMes, selectedMonth, setSelectedMonth } = useApp()
@@ -40,12 +42,12 @@ export default function PrestacaoContasPage() {
         <MonthPicker value={selectedMonth} onChange={setSelectedMonth} />
         <div className="flex items-center gap-3">
           {fechado ? (
-            <Badge variant="warning">🔒 fechado por {fechamento.fechadoPor}</Badge>
+            <Badge variant="warning"><IconLock className="w-3.5 h-3.5" /> fechado por {fechamento.fechadoPor}</Badge>
           ) : (
-            <Badge variant="success">🟢 mês em aberto</Badge>
+            <Badge variant="success"><IconCheckCircle className="w-3.5 h-3.5" /> mês em aberto</Badge>
           )}
           <Button variant="outline" onClick={() => window.print()}>
-            📄 Gerar Prestação de Contas
+            <IconFileText className="w-4 h-4" /> Gerar Prestação de Contas
           </Button>
           {isAdmin && !fechado && (
             <Button onClick={() => setFecharAberto(true)}>Fechar Prestação de Contas</Button>
@@ -112,7 +114,7 @@ export default function PrestacaoContasPage() {
       <Card className="p-5 no-print">
         <h3 className="font-display font-semibold text-plum mb-4">Acertos entre as moradoras</h3>
         {acertos.length === 0 ? (
-          <p className="text-sm text-plum/40 py-4 text-center">Tudo certo — ninguém precisa acertar nada esse mês. 🎉</p>
+          <p className="text-sm text-plum/40 py-4 text-center">Tudo certo — ninguém precisa acertar nada esse mês.</p>
         ) : (
           <ul className="space-y-2">
             {acertos.map((a, i) => (
@@ -147,15 +149,22 @@ export default function PrestacaoContasPage() {
                 </tr>
               </thead>
               <tbody>
-                {resumo.despesasMes.map((d) => (
-                  <tr key={d.id} className="border-b border-plum/5 last:border-0">
-                    <td className="py-2 text-plum/60">{formatDate(d.data)}</td>
-                    <td className="py-2">{d.descricao}</td>
-                    <td className="py-2">{categoriaOf(d.categoriaId)?.icon} {categoriaOf(d.categoriaId)?.nome}</td>
-                    <td className="py-2">{moradoras.find((m) => m.id === d.pagoPor)?.nome}</td>
-                    <td className="py-2 text-right font-medium">{formatBRL(d.valor)}</td>
-                  </tr>
-                ))}
+                {resumo.despesasMes.map((d) => {
+                  const CatIcon = getCategoryIcon(d.categoriaId)
+                  return (
+                    <tr key={d.id} className="border-b border-plum/5 last:border-0">
+                      <td className="py-2 text-plum/60">{formatDate(d.data)}</td>
+                      <td className="py-2">{d.descricao}</td>
+                      <td className="py-2">
+                        <span className="inline-flex items-center gap-1.5">
+                          <CatIcon className="w-3.5 h-3.5 text-plum/40" /> {categoriaOf(d.categoriaId)?.nome}
+                        </span>
+                      </td>
+                      <td className="py-2">{moradoras.find((m) => m.id === d.pagoPor)?.nome}</td>
+                      <td className="py-2 text-right font-medium">{formatBRL(d.valor)}</td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>

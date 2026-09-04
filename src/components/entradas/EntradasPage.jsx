@@ -10,6 +10,7 @@ import EmptyState from '../ui/EmptyState.jsx'
 import MonthPicker from '../ui/MonthPicker.jsx'
 import MoradoraAvatar from '../moradoras/MoradoraAvatar.jsx'
 import EntradaForm from './EntradaForm.jsx'
+import { IconWallet, IconLock, IconPencil, IconTrash } from '../ui/Icons.jsx'
 
 export default function EntradasPage() {
   const {
@@ -74,7 +75,7 @@ export default function EntradasPage() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <MonthPicker value={selectedMonth} onChange={setSelectedMonth} />
         <div className="flex items-center gap-3">
-          {mesFechado && <Badge variant="warning">🔒 mês fechado</Badge>}
+          {mesFechado && <Badge variant="warning"><IconLock className="w-3.5 h-3.5" /> mês fechado</Badge>}
           {isAdmin && (
             <Button variant="secondary" onClick={openNova} disabled={mesFechado}>
               + Nova Entrada
@@ -100,7 +101,7 @@ export default function EntradasPage() {
       <Card className="overflow-hidden">
         {lista.length === 0 ? (
           <EmptyState
-            icon="💰"
+            icon={<IconWallet />}
             title="Nenhuma entrada neste mês"
             subtitle="Registre os depósitos que as moradoras fizeram na caixinha."
             action={isAdmin && !mesFechado && <Button variant="secondary" onClick={openNova}>+ Nova Entrada</Button>}
@@ -140,12 +141,12 @@ export default function EntradasPage() {
                                   setEditando(e)
                                   setFormOpen(true)
                                 }}
-                                className="w-8 h-8 rounded-lg hover:bg-plum/8 text-plum/50"
+                                className="w-8 h-8 rounded-lg hover:bg-plum/8 text-plum/50 inline-flex items-center justify-center"
                               >
-                                ✏️
+                                <IconPencil className="w-4 h-4" />
                               </button>
-                              <button onClick={() => setExcluindo(e)} className="w-8 h-8 rounded-lg hover:bg-coral-50 text-coral-500">
-                                🗑️
+                              <button onClick={() => setExcluindo(e)} className="w-8 h-8 rounded-lg hover:bg-coral-50 text-coral-500 inline-flex items-center justify-center">
+                                <IconTrash className="w-4 h-4" />
                               </button>
                             </div>
                           )}

@@ -1,6 +1,7 @@
 import React from 'react'
 import { formatBRL, formatDate, formatMonthLabel } from '../../utils/format.js'
 import { computeAcertos } from '../../utils/calc.js'
+import logoSquare from '../../assets/logo-square.png'
 
 export default function RelatorioPrint({ resumo, categorias, fechamento }) {
   const acertos = computeAcertos(resumo.porMoradora)
@@ -9,9 +10,12 @@ export default function RelatorioPrint({ resumo, categorias, fechamento }) {
   return (
     <div className="hidden print:block print-area bg-white text-plum p-10 text-sm">
       <header className="flex items-center justify-between border-b-2 border-plum pb-4 mb-6">
-        <div>
-          <h1 className="font-display text-2xl font-bold">tanto faz</h1>
-          <p className="text-plum/50 text-xs uppercase tracking-wide">Prestação de contas</p>
+        <div className="flex items-center gap-3">
+          <img src={logoSquare} alt="" className="w-12 h-12 rounded-md object-cover" />
+          <div>
+            <h1 className="font-display text-2xl font-bold">República Tanto Faz</h1>
+            <p className="text-plum/50 text-xs uppercase tracking-wide">Prestação de contas</p>
+          </div>
         </div>
         <div className="text-right">
           <p className="font-semibold capitalize">{formatMonthLabel(resumo.monthKey)}</p>

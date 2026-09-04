@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useApp } from '../../context/AppContext.jsx'
-import Logo from './Logo.jsx'
 import Button from '../ui/Button.jsx'
+import logoWide from '../../assets/logo-wide.png'
 
 export default function Onboarding() {
   const { addMoradora } = useApp()
@@ -25,10 +25,10 @@ export default function Onboarding() {
     <div className="min-h-screen flex items-center justify-center bg-cream px-4">
       <div className="w-full max-w-md">
         <div className="flex justify-center mb-8">
-          <Logo />
+          <img src={logoWide} alt="República Tanto Faz" className="h-24 w-auto rounded-xl shadow-soft" />
         </div>
         <div className="bg-white rounded-2xl shadow-soft p-7">
-          <h1 className="font-display text-xl font-bold text-plum text-center">Bem-vinda! 🏡</h1>
+          <h1 className="font-display text-xl font-bold text-plum text-center">Bem-vinda</h1>
           <p className="text-sm text-plum/60 text-center mt-1.5 mb-6">
             Quem mora na república? Cadastre as moradoras para começar a controlar a caixinha.
           </p>

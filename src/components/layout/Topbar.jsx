@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useApp } from '../../context/AppContext.jsx'
 import MoradoraAvatar from '../moradoras/MoradoraAvatar.jsx'
+import { IconMenu, IconChevronDown } from '../ui/Icons.jsx'
 
 const PAGE_TITLES = {
   dashboard: 'Início',
@@ -26,7 +27,7 @@ export default function Topbar({ page, setMobileOpen }) {
             onClick={() => setMobileOpen(true)}
             aria-label="Abrir menu"
           >
-            ☰
+            <IconMenu className="w-5 h-5" />
           </button>
           <h1 className="font-display text-xl font-semibold text-plum">{PAGE_TITLES[page]}</h1>
         </div>
@@ -44,7 +45,7 @@ export default function Topbar({ page, setMobileOpen }) {
             <span className="text-sm font-semibold text-plum hidden sm:inline">
               {role === 'admin' ? 'Administradora' : eu?.nome || 'Escolher moradora'}
             </span>
-            <span className="text-plum/40 text-xs">▾</span>
+            <IconChevronDown className="w-3.5 h-3.5 text-plum/40" />
           </button>
 
           {menuOpen && (

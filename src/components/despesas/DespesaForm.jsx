@@ -3,6 +3,7 @@ import { useApp } from '../../context/AppContext.jsx'
 import { FORMAS_PAGAMENTO } from '../../data/defaults.js'
 import { todayISO } from '../../utils/format.js'
 import Button from '../ui/Button.jsx'
+import { IconPaperclip } from '../ui/Icons.jsx'
 
 const inputClass =
   'w-full px-3.5 py-2.5 rounded-xl border border-plum/15 bg-white text-sm text-plum placeholder:text-plum/30 focus:outline-none focus:ring-2 focus:ring-coral-300 focus:border-coral-300'
@@ -85,7 +86,7 @@ export default function DespesaForm({ initial, onSubmit, onCancel, defaultMorado
             <select className={inputClass} value={categoriaId} onChange={(e) => setCategoriaId(e.target.value)}>
               {categorias.map((c) => (
                 <option key={c.id} value={c.id}>
-                  {c.icon} {c.nome}
+                  {c.nome}
                 </option>
               ))}
             </select>
@@ -140,7 +141,9 @@ export default function DespesaForm({ initial, onSubmit, onCancel, defaultMorado
         <label className={labelClass}>Comprovante</label>
         {initial?.comprovanteId && !comprovanteFile && !removerComprovante && (
           <div className="flex items-center justify-between bg-plum/5 rounded-xl px-3.5 py-2.5 mb-2 text-sm">
-            <span className="text-plum/70 truncate">📎 {initial.comprovanteNome || 'arquivo anexado'}</span>
+            <span className="text-plum/70 truncate inline-flex items-center gap-1.5">
+              <IconPaperclip className="w-4 h-4 text-plum/40" /> {initial.comprovanteNome || 'arquivo anexado'}
+            </span>
             <button type="button" className="text-coral-600 text-xs font-semibold" onClick={() => setRemoverComprovante(true)}>
               remover
             </button>

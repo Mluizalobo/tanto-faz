@@ -6,6 +6,8 @@ import Card from '../ui/Card.jsx'
 import Badge from '../ui/Badge.jsx'
 import EmptyState from '../ui/EmptyState.jsx'
 import MoradoraAvatar from '../moradoras/MoradoraAvatar.jsx'
+import { IconBook } from '../ui/Icons.jsx'
+import { getCategoryIcon } from '../../utils/categoryIcon.js'
 
 export default function HistoricoPage({ goTo }) {
   const { moradoras, despesas, entradas, categorias, fechamentos, setSelectedMonth } = useApp()
@@ -23,7 +25,7 @@ export default function HistoricoPage({ goTo }) {
   }
 
   if (meses.length === 0) {
-    return <EmptyState icon="📚" title="Ainda não há histórico" subtitle="Assim que o primeiro mês tiver movimentação, ele aparece aqui." />
+    return <EmptyState icon={<IconBook />} title="Ainda não há histórico" subtitle="Assim que o primeiro mês tiver movimentação, ele aparece aqui." />
   }
 
   return (
@@ -69,9 +71,10 @@ export default function HistoricoPage({ goTo }) {
                     <div className="flex flex-wrap gap-2">
                       {Object.entries(resumo.porCategoria).map(([catId, valor]) => {
                         const cat = categoriaOf(catId)
+                        const CatIcon = getCategoryIcon(catId)
                         return (
-                          <span key={catId} className="text-xs bg-plum/5 rounded-full px-3 py-1.5 font-medium">
-                            {cat?.icon} {cat?.nome}: <strong>{formatBRL(valor)}</strong>
+                          <span key={catId} className="inline-flex items-center gap-1.5 text-xs bg-plum/5 rounded-full px-3 py-1.5 font-medium">
+                            <CatIcon className="w-3.5 h-3.5 text-plum/50" /> {cat?.nome}: <strong>{formatBRL(valor)}</strong>
                           </span>
                         )
                       })}
