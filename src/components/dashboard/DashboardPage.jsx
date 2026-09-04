@@ -11,7 +11,6 @@ import MoradoraAvatar from '../moradoras/MoradoraAvatar.jsx'
 import DespesaForm from '../despesas/DespesaForm.jsx'
 import PlanilhaDespesas from './PlanilhaDespesas.jsx'
 import { IconWallet, IconReceipt, IconHash, IconUsers } from '../ui/Icons.jsx'
-import logoSquare from '../../assets/logo-square.png'
 
 export default function DashboardPage({ goTo }) {
   const { moradoras, despesas, entradas, role, currentMoradoraId, addDespesa, selectedMonth, setSelectedMonth, isMonthClosed } = useApp()
@@ -39,12 +38,6 @@ export default function DashboardPage({ goTo }) {
       </div>
 
       <Card className="p-6 bg-plum text-white overflow-hidden relative">
-        <img
-          src={logoSquare}
-          alt=""
-          aria-hidden="true"
-          className="absolute -right-8 -top-8 w-44 h-44 opacity-[0.14] select-none rounded-2xl pointer-events-none"
-        />
         <p className="text-white/60 text-sm font-semibold">Saldo atual da caixinha</p>
         <p className="font-display text-4xl font-bold mt-1">{formatBRL(resumo.saldoFinal)}</p>
         <div className="flex flex-wrap gap-x-8 gap-y-2 mt-4 text-sm text-white/70">
