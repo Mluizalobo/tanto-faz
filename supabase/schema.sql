@@ -73,21 +73,16 @@ on conflict (id) do nothing;
 -- Este é um app privado só para a república (sem login individual), então liberamos
 -- leitura e escrita para quem tiver o link do app. Não há dados sensíveis (só despesas
 -- da casa), mas evite compartilhar o link publicamente fora do grupo da república.
-create policy if not exists "public read moradoras" on moradoras for select using (true);
-create policy if not exists "public write moradoras" on moradoras for all using (true) with check (true);
 alter table moradoras enable row level security;
-
-create policy if not exists "public all categorias" on categorias for all using (true) with check (true);
 alter table categorias enable row level security;
-
-create policy if not exists "public all despesas" on despesas for all using (true) with check (true);
 alter table despesas enable row level security;
-
-create policy if not exists "public all entradas" on entradas for all using (true) with check (true);
 alter table entradas enable row level security;
-
-create policy if not exists "public all fechamentos" on fechamentos for all using (true) with check (true);
 alter table fechamentos enable row level security;
 
-create policy if not exists "public all comprovantes" on storage.objects for all
+create policy "public all moradoras" on moradoras for all using (true) with check (true);
+create policy "public all categorias" on categorias for all using (true) with check (true);
+create policy "public all despesas" on despesas for all using (true) with check (true);
+create policy "public all entradas" on entradas for all using (true) with check (true);
+create policy "public all fechamentos" on fechamentos for all using (true) with check (true);
+create policy "public all comprovantes" on storage.objects for all
   using (bucket_id = 'comprovantes') with check (bucket_id = 'comprovantes');
