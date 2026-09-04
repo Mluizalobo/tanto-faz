@@ -8,7 +8,7 @@ export default {
         sans: ['"Inter"', 'system-ui', 'sans-serif'],
       },
       colors: {
-        cream: '#F6F5F2',
+        cream: '#E8CD69',
         coral: {
           50: '#FFF1EC',
           100: '#FFE1D6',

@@ -10,12 +10,18 @@ import PrestacaoContasPage from './components/prestacao/PrestacaoContasPage.jsx'
 import HistoricoPage from './components/historico/HistoricoPage.jsx'
 import MinhaSituacaoPage from './components/situacao/MinhaSituacaoPage.jsx'
 import Onboarding from './components/layout/Onboarding.jsx'
+import LandingScreen from './components/layout/LandingScreen.jsx'
 import logoSquare from './assets/logo-square.png'
 
 export default function App() {
   const { moradoras, role, loading, erroConexao } = useApp()
   const [page, setPage] = useState('dashboard')
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [entrou, setEntrou] = useState(false)
+
+  if (!entrou) {
+    return <LandingScreen onEnter={() => setEntrou(true)} />
+  }
 
   if (loading) {
     return (
